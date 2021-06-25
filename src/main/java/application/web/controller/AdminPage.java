@@ -1,8 +1,13 @@
 package application.web.controller;
 
+import application.entity.Role;
 import application.entity.User;
 import application.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -10,8 +15,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Controller
 public class AdminPage {
@@ -19,15 +24,8 @@ public class AdminPage {
     @Autowired
     private UserService userService;
 
-    @RequestMapping(value = "/hello", method = RequestMethod.GET)
-    public String printWelcome(ModelMap model) {
-        List<String> messages = new ArrayList<>();
-        messages.add("Hello!");
-        messages.add("I'm Spring MVC-SECURITY application");
-        messages.add("5.2.0 version by sep'19 ");
-        model.addAttribute("messages", messages);
-        return "hello";
-    }
+    @Autowired
+    UserDetailsService userDetailsService;
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public String loginPage() {
@@ -35,31 +33,37 @@ public class AdminPage {
     }
 
 
-    @GetMapping("/")
+    @GetMapping("/admin")
     public String showAllUsers(Model model) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User authUser = userService.getByUserName(auth.getName());
+        Set<Role> userRoles = new HashSet<>(authUser.getRoles());
         List<User> allUsers = userService.getAllUsers();
         model.addAttribute("allUsers", allUsers);
+//        model.addAttribute("userRoles", userRoles);
+
+
         return "admin-page-ViewAllUsers";
     }
 
 
-    @GetMapping("/create")
+    @GetMapping("/admin/create")
     public String addUser(Model model) {
         User user = new User();
         model.addAttribute("user", user);
         return "createNewUser";
     }
 
-    @PostMapping()
+    @PatchMapping()
     public String addUser(@ModelAttribute("user") @Valid User user, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "createNewUser";
         }
         userService.addUser(user);
-        return "redirect:/";
+        return "redirect:/admin";
     }
 
-    @GetMapping("/{id}/update")
+    @GetMapping("/admin/{id}/update")
     public String updateUser(Model model, @PathVariable("id") int id) {
         model.addAttribute("user", userService.getUser(id));
         return "update-user";
@@ -71,10 +75,10 @@ public class AdminPage {
             return "update-user";
         }
         userService.updateUser(id, user);
-        return "redirect:/";
+        return "redirect:/admin";
     }
 
-    @GetMapping("/{id}/delete")
+    @GetMapping("/admin/{id}/delete")
     public String deleteUser(Model model, @PathVariable("id") int id) {
         model.addAttribute("user", userService.getUser(id));
         return "delete-user";
@@ -83,6 +87,14 @@ public class AdminPage {
     @DeleteMapping("/{id}")
     public String deleteUser(@PathVariable("id") int id) {
         userService.deleteUser(id);
-        return "redirect:/";
+        return "redirect:/admin";
+    }
+
+    @GetMapping("/user")
+    public String showInfoUser(Model model) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userService.getByUserName(auth.getName());
+        model.addAttribute("user", user);
+        return "user-info";
     }
 }

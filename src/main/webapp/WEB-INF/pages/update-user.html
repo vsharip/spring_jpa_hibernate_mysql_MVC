@@ -30,6 +30,14 @@
         <div style="color: brown" th:if="${#fields.hasErrors('age')}" th:errors="*{age}"> Age error </div>
         <br/>
 
+        <label for="age">Password</label>
+        <input type = "text" th:field="*{password}" id="password">
+        <div style="color: brown" th:if="${#fields.hasErrors('age')}" th:errors="*{password}"> Password error </div>
+        <br/>
+
+        <input type="checkbox" name="Admin" th:checked="${user.roles}" />
+        <input type="checkbox" name="User" th:checked="${user.roles}" />
+
         <input type="submit" value="Update User"/>
 
     </div>

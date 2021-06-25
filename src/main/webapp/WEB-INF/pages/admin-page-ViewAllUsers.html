@@ -16,6 +16,8 @@
         <th>Surname</th>
         <th>City</th>
         <th>Age</th>
+        <th>Password</th>
+        <th>Roles</th>
         <th>Operations</th>
     </tr>
 
@@ -24,14 +26,23 @@
         <td th:utext="${user.getSurname()}">Surname</td>
         <td th:utext="${user.getCity()}">City</td>
         <td th:utext="${user.getAge()}">Age</td>
+        <td th:utext="${user.getPassword()}">Password</td>
         <td>
-            <div> <a th:href="@{/{id}/update(id=${user.getId()})}">Update</a> </div>
-            <div> <a th:href="@{/{id}/delete(id=${user.getId()})}">Delete</a> </div>
+            <div th:each="role :${user.getRoles()}" th:utext="${role.getRole()}">Roles</div>
+        </td>
+<!--        <td th:each="role :${user.getRoles()}" th:utext="${role.getRole()}">Roles</td>-->
+        <td>
+            <div> <a th:href="@{/admin/{id}/update(id=${user.getId()})}">Update</a> </div>
+            <div> <a th:href="@{/admin/{id}/delete(id=${user.getId()})}">Delete</a> </div>
         </td>
     </tr>
 </table>
 <br/>
 <hr/>
-<a href="/create">Add new user</a>
+<a href="/admin/create">Add new user</a>
+<br/>
+<br/>
+<br/>
+<button type="button"><a href="/logout">Exit</a></button>
 </body>
 </html>

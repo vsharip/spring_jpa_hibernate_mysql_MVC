@@ -8,7 +8,7 @@
 
 <body>
 
-<form th:method="POST" th:action="@{/}" th:object="${user}">
+<form th:method="PATCH" th:action="@{/}" th:object="${user}">
     <div>
         <label for="name">Name</label>
         <input type = "text" th:field="*{name}" id="name">
@@ -28,6 +28,16 @@
         <label for="age">Age</label>
         <input type = "text" th:field="*{age}" id="age">
         <div style="color: brown" th:if="${#fields.hasErrors('age')}" th:errors="*{age}"> Age error </div>
+        <br/>
+
+        <label for="age">Password</label>
+        <input type = "text" th:field="*{password}" id="password">
+        <div style="color: brown" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"> Password error </div>
+        <br/>
+
+        <label for="age">Roles</label>
+        <input type = "text" th:field="*{roles}" id="roles">
+        <div style="color: brown" th:if="${#fields.hasErrors('roles')}" th:errors="*{roles}"> Roles error </div>
         <br/>
 
         <input type="submit" value="add User"/>
