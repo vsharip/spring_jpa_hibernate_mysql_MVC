@@ -2,21 +2,25 @@ package application.web.controller;
 
 import application.entity.Role;
 import application.entity.User;
+import application.service.RoleService;
 import application.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
+
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetailsService;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.ui.ModelMap;
+
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.*;
+import java.util.concurrent.Phaser;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 
 @Controller
 public class AdminPage {
@@ -25,7 +29,8 @@ public class AdminPage {
     private UserService userService;
 
     @Autowired
-    UserDetailsService userDetailsService;
+    RoleService roleService;
+
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public String loginPage() {
@@ -35,22 +40,15 @@ public class AdminPage {
 
     @GetMapping("/admin")
     public String showAllUsers(Model model) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        User authUser = userService.getByUserName(auth.getName());
-        Set<Role> userRoles = new HashSet<>(authUser.getRoles());
-        List<User> allUsers = userService.getAllUsers();
-        model.addAttribute("allUsers", allUsers);
-//        model.addAttribute("userRoles", userRoles);
-
-
+        model.addAttribute("allUsers", userService.getAllUsers());
         return "admin-page-ViewAllUsers";
     }
 
 
     @GetMapping("/admin/create")
     public String addUser(Model model) {
-        User user = new User();
-        model.addAttribute("user", user);
+        model.addAttribute("user", new User());
+        model.addAttribute("roleList", roleService.getAllRoles());
         return "createNewUser";
     }
 

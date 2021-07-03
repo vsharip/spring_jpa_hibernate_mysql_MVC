@@ -2,6 +2,8 @@ package application.dao;
 
 import application.entity.Role;
 import application.entity.User;
+import application.service.RoleService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -16,6 +18,8 @@ import javax.persistence.TypedQuery;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Repository
 public class UserDAOImpl implements UserDAO {
@@ -23,6 +27,11 @@ public class UserDAOImpl implements UserDAO {
     @PersistenceContext
     private EntityManager entityManager;
 
+    @Autowired
+    RoleDAO roleDAO;
+
+    @Autowired
+    RoleService roleService;
 
     @Override
     public List<User> getAllUsers() {
@@ -41,6 +50,8 @@ public class UserDAOImpl implements UserDAO {
     @Override
     public void addUser(User user) {
         System.out.println("Соединение с базой успешно выполнено для добавления юзера");
+        Set<Role> roles = roleService.getAllRoles().stream().collect(Collectors.toSet());
+        user.setRoles(roles);
         entityManager.persist(user);
         System.out.println("Юзер " + user.getName() + " добавлен в БД");
     }

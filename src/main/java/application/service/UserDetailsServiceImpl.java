@@ -31,7 +31,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private Collection <? extends GrantedAuthority> setGrantedAuthorities(Collection<Role> roles) {
         System.out.println("Инициализация setGrantedAuthorities ");
         return roles.stream()
-                .map(s -> new SimpleGrantedAuthority(s.getRole())).collect(Collectors.toList());
+                .map(s -> new SimpleGrantedAuthority(s.getName())).collect(Collectors.toList());
     }
 
     @Override

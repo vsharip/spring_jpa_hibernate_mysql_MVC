@@ -13,11 +13,10 @@ import java.util.Set;
 @Table(name = "users")
 public class User implements UserDetails {
 
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private int id;
+    private Integer id;
 
 
     @Column(name = "name", unique = true)
@@ -37,7 +36,7 @@ public class User implements UserDetails {
 
     @Column(name = "age")
     @Min(value = 18L, message = "Соискатель должен быть старше 18 лет")
-    @Max(value = 65L, message = "Соискатель должен быть младше 65 лет" )
+    @Max(value = 65L, message = "Соискатель должен быть младше 65 лет")
     private int age;
 
 
@@ -46,25 +45,22 @@ public class User implements UserDetails {
     @Size(min = 1, max = 20, message = "Введите от 1 до 20 символов")
     private String password;
 
-    @Column(name = "enabled")
-    @NotNull
-    private boolean enabled;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
-    private Set<Role> roles;
+    @JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Set<Role> roles = new HashSet<>();
+
 
     public User() {
     }
 
-    public User(String name, String surname, String city, int age, String password, boolean enabled, Set<Role> roles) {
+    public User(String name, String surname, String city, int age, String password, Set<Role> roles) {
         this.name = name;
         this.surname = surname;
         this.city = city;
         this.age = age;
         this.password = password;
-        this.enabled = enabled;
         this.roles = roles;
     }
 
@@ -72,7 +68,7 @@ public class User implements UserDetails {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -117,13 +113,12 @@ public class User implements UserDetails {
     }
 
     public void setRoles(Set<Role> roles) {
-        this.roles = new HashSet<>();
+        this.roles = roles;
     }
 
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
+    public void addRole(Role role) {
+        this.roles.add(role);
     }
-
 
     @Override
     public String toString() {
@@ -143,7 +138,7 @@ public class User implements UserDetails {
 
     @Override
     public String getPassword() {
-        return password ;
+        return password;
     }
 
     @Override
