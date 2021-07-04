@@ -8,7 +8,7 @@ import java.util.Set;
 
 
 @Entity
-@Table(name = "roles")
+@Table(name = "role")
 public class Role implements GrantedAuthority {
 
     @Id
@@ -16,15 +16,9 @@ public class Role implements GrantedAuthority {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-
-    @Column(name = "name", unique = true)
+    @Column(name = "name")
     private String name;
 
-//    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-//    @JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"),
-//            inverseJoinColumns = @JoinColumn(name = "user_id"))
-    @ManyToMany(mappedBy = "roles")
-    private Set<User> users = new HashSet<>();
 
     public Role() {
     }
@@ -56,21 +50,6 @@ public class Role implements GrantedAuthority {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public Set<User> getUsers() {
-        return users;
-    }
-
-    public void setUsers(Set<User> users) {
-        this.users = users;
-    }
-
-    public void addUser(User user) {
-        if (users == null) {
-            users = new HashSet<>();
-        }
-        users.add(user);
     }
 
 

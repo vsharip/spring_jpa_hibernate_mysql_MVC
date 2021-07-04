@@ -6,11 +6,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "users")
+@Table(name = "user")
 public class User implements UserDetails {
 
     @Id
@@ -19,7 +18,7 @@ public class User implements UserDetails {
     private Integer id;
 
 
-    @Column(name = "name", unique = true)
+    @Column(name = "name")
     @NotEmpty(message = "Поле не может быть пустым")
     @Size(min = 3, max = 40, message = "Длина имени недопустимо")
     private String name;
@@ -47,13 +46,15 @@ public class User implements UserDetails {
 
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_id"),
+    @JoinTable(name = "users_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private Set<Role> roles = new HashSet<>();
+    private Set<Role> roles;
 
 
     public User() {
     }
+
 
     public User(String name, String surname, String city, int age, String password, Set<Role> roles) {
         this.name = name;
@@ -64,7 +65,11 @@ public class User implements UserDetails {
         this.roles = roles;
     }
 
-    public int getId() {
+    public void addRole(Role role) {
+        this.roles.add(role);
+    }
+
+    public Integer getId() {
         return id;
     }
 
@@ -114,10 +119,6 @@ public class User implements UserDetails {
 
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
-    }
-
-    public void addRole(Role role) {
-        this.roles.add(role);
     }
 
     @Override

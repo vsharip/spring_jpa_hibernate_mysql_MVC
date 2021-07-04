@@ -11,7 +11,7 @@
 <h1>User list</h1>
 
 <table border="1">
-    <tr>
+    <tr style="text-align: center; vertical-align: middle">
         <th>Name</th>
         <th>Surname</th>
         <th>City</th>
@@ -22,13 +22,14 @@
     </tr>
 
     <tr th:each="user : ${allUsers}">
-        <td th:utext="${user.getName()}">Name</td>
-        <td th:utext="${user.getSurname()}">Surname</td>
-        <td th:utext="${user.getCity()}">City</td>
-        <td th:utext="${user.getAge()}">Age</td>
-        <td th:utext="${user.getPassword()}">Password</td>
+        <td th:utext="${user.getName()}" style="text-align: center; vertical-align: middle">Name</td>
+        <td th:utext="${user.getSurname()}" style="text-align: center; vertical-align: middle">Surname</td>
+        <td th:utext="${user.getCity()}" style="text-align: center; vertical-align: middle">City</td>
+        <td th:utext="${user.getAge()}" style="text-align: center; vertical-align: middle">Age</td>
+        <td th:utext="${user.getPassword()}" style="text-align: center; vertical-align: middle">Password</td>
         <td>
-            <div th:each="role :${user.getRoles()}" th:utext="${role.getName()}">Roles</div>
+            <div th:each="role :${user.getRoles()}" th:utext="${role.name}" style=
+                    "text-align: center; vertical-align: middle">Roles</div>
         </td>
         <td>
             <div> <a th:href="@{/admin/{id}/update(id=${user.getId()})}">Update</a> </div>

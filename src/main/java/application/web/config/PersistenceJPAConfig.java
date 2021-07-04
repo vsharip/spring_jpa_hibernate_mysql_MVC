@@ -62,6 +62,7 @@ public class PersistenceJPAConfig {
     Properties additionalProperties() {
         Properties properties = new Properties();
         properties.setProperty(Environment.HBM2DDL_AUTO, "update");
+        properties.setProperty(Environment.FORMAT_SQL, "true");
         properties.setProperty(Environment.DIALECT, "org.hibernate.dialect.MySQL8Dialect");
         properties.setProperty(Environment.SHOW_SQL, "true");
         properties.setProperty(Environment.C3P0_MIN_SIZE, "5");

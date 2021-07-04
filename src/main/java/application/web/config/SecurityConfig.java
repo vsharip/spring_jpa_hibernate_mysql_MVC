@@ -18,7 +18,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import javax.sql.DataSource;
 
 @Configuration
-@EnableWebSecurity(debug = true)
+@EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final UserDetailsService userDetailsService;
@@ -39,19 +39,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         // прохождения аутентификации
     }
 
-
-//    @Autowired
-//    LoginSuccessHandler successHandler;
-//
-//    @Autowired
-//    UserDetailsService userDetailsService;
-
-
-
-
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        System.out.println("loginPage запустился");
+
         http.formLogin()
                 // указываем страницу с формой логина
                 .loginPage("/login")

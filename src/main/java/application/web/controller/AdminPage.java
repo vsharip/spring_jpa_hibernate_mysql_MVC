@@ -1,6 +1,5 @@
 package application.web.controller;
 
-import application.entity.Role;
 import application.entity.User;
 import application.service.RoleService;
 import application.service.UserService;
@@ -17,10 +16,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.*;
-import java.util.concurrent.Phaser;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 
 @Controller
 public class AdminPage {
@@ -32,7 +27,7 @@ public class AdminPage {
     RoleService roleService;
 
 
-    @RequestMapping(value = "/login", method = RequestMethod.GET)
+    @GetMapping(value = "/login")
     public String loginPage() {
         return "login";
     }
@@ -40,7 +35,8 @@ public class AdminPage {
 
     @GetMapping("/admin")
     public String showAllUsers(Model model) {
-        model.addAttribute("allUsers", userService.getAllUsers());
+        List<User> allUsers = userService.getAllUsers();
+        model.addAttribute("allUsers", allUsers);
         return "admin-page-ViewAllUsers";
     }
 
@@ -64,6 +60,7 @@ public class AdminPage {
     @GetMapping("/admin/{id}/update")
     public String updateUser(Model model, @PathVariable("id") int id) {
         model.addAttribute("user", userService.getUser(id));
+        model.addAttribute("roleList", roleService.getAllRoles());
         return "update-user";
     }
 
@@ -91,8 +88,7 @@ public class AdminPage {
     @GetMapping("/user")
     public String showInfoUser(Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        User user = userService.getByUserName(auth.getName());
-        model.addAttribute("user", user);
+        model.addAttribute("user", userService.getByUserName(auth.getName()));
         return "user-info";
     }
 }

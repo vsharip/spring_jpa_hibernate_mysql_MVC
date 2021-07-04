@@ -9,10 +9,11 @@
 <body>
 
 <form th:method="PATCH" th:action="@{/}" th:object="${user}">
+    <h2>Create new user</h2>
     <div>
         <label for="name">Name</label>
         <input type="text" th:field="*{name}" id="name">
-        <div style="color: #ff1200" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"> Name error</div>
+        <div style="color: brown" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"> Name error</div>
         <br/>
 
         <label for="surname">Surname</label>
@@ -35,36 +36,16 @@
         <div style="color: brown" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"> Password error</div>
         <br/>
 
+        <label>Roles</label>
         <div>
             <th:block th:each="role : ${roleList}">
                 <input type="checkbox" th:field="*{roles}"
-                       th:name="roleSet"
-                       th:value="${role.getId()}"
-                       th:utext="${role.getName()}">
+                       th:value="${role.id}"
+                       th:utext="${role.name}">
             </th:block>
         </div>
+    <br/>
 
-        <!--        <div class="checkbox" th:each="role: ${roleList}">-->
-        <!--            <label th:text="${role.getRole()}"></label>-->
-        <!--            <input th:field="*{roles}" type="checkbox" th:value="${role.getId()}"/>-->
-        <!--        </div>-->
-        <!--        <div th:each="role:${roleList}">-->
-        <!--            <label th:form="${role}" ><input th:type="checkbox"-->
-        <!--                          th:name="${role.getRole()}"-->
-        <!--                          th:value="${role.getId()}"-->
-        <!--                          th:text="${role.getRole()}">-->
-        <!--            </label>-->
-        <!--        </div>-->
-        <!--        <ul>-->
-        <!--            <li th:each="role : ${roleList}">-->
-        <!--                <input type="checkbox" th:field="*{roles}" th:value="${role.id}" />-->
-        <!--                <label th:for="${#ids.prev('roles')}"-->
-        <!--                       th:text="#{${'seedstarter.role.' + role}}">ROLES</label>-->
-        <!--            </li>-->
-        <!--        </ul>-->
-
-
-        <br/>
         <input type="submit" value="add User"/>
 
     </div>
